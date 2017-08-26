@@ -1,0 +1,19 @@
+#!/bin/bash
+
+DOCKER_USER_HOME=/home/user
+CACHED_VOLUMES="m2 groovy grails gradle"
+
+function get_cached_volumes {
+    volumes_str=""
+    for v in $CACHED_VOLUMES; do
+        volumes_str+="-v $HOME/.$v:$DOCKER_USER_HOME/.$v "
+    done
+    echo $volumes_str
+}
+
+docker run -it --rm \
+	-e DB_USERNAME='root' -e DB_PASSWORD='sagal' \
+    -v `pwd`:$DOCKER_USER_HOME/app \
+    `get_cached_volumes` \
+    -p 5000:8080 \
+    grails:3.2.8 bash
